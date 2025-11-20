@@ -22,7 +22,7 @@ public class TaxiEvent {
     
     @Override
     public String toString() {
-        return String.format("TaxiEvent{time=%s, location=%s, amount=%.2f}", 
-                           tpepPickupDatetime, puLocationId, totalAmount);
+        return String.format("TaxiEvent{time=%s, location=%s, amount=%.2f, distance=%.1f, passengers=%d}",
+                           tpepPickupDatetime, puLocationId, totalAmount, tripDistance, passengerCount);
     }
 }
