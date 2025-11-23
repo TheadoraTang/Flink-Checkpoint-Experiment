@@ -9,10 +9,30 @@
 - 3个 TaskManager
 
 ## 实验步骤
-1. 构建项目: `mvn clean package`
-2. 启动集群: `docker-compose up -d`
-3. 运行实验: `./scripts/run-experiment.sh`
-4. 监控指标: `./scripts/monitor-metrics.sh`
+# 克隆项目
+git clone <your-repo>
+cd flink-checkpoint-experiment
+
+# 将 nyc-taxi-2023-01.csv 放入 data/ 目录
+
+# 安装依赖
+sudo apt-get update
+sudo apt-get install docker docker-compose python3-pip
+
+# 创建虚拟环境
+python3 -m venv flink-env
+
+# 激活虚拟环境
+source flink-env/bin/activate
+
+# 安装依赖
+pip install psutil requests
+
+# 给脚本执行权限
+chmod +x scripts/*.sh
+
+# 运行优化后的实验
+./scripts/run-experiment-with-detailed-metrics.sh
 
 ## 检查点间隔配置
 - 实验1: 30秒
