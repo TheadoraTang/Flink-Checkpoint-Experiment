@@ -151,7 +151,7 @@ public class TaxiRevenueJob {
                 currentIndex = (currentIndex + 1) % eventPool.size();
                 
                 // 控制发射速率
-                Thread.sleep(200); // 每秒5个事件
+                Thread.sleep(2000); // 每秒5个事件
                 
                 // 定期输出状态
                 if (eventsEmitted % 50 == 0) {

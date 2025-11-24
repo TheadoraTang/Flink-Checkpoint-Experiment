@@ -20,7 +20,7 @@ cd flink-checkpoint-experiment
 ### 安装依赖
 ```bash
 sudo apt-get update
-sudo apt-get install docker docker-compose python3-pip
+sudo apt-get install docker-compose python3-pip
 ```
 
 
