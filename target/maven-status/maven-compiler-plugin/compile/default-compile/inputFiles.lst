@@ -1,0 +1,4 @@
+/home/thea/flink-checkpoint-experiment/src/main/java/com/experiment/TaxiEvent.java
+/home/thea/flink-checkpoint-experiment/src/main/java/com/experiment/TaxiEventParser.java
+/home/thea/flink-checkpoint-experiment/src/main/java/com/experiment/TaxiRevenueFunction.java
+/home/thea/flink-checkpoint-experiment/src/main/java/com/experiment/TaxiRevenueJob.java
