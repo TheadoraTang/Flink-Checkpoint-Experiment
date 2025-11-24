@@ -39,33 +39,40 @@ if [ "$JOB_ID" = "null" ] || [ -z "$JOB_ID" ]; then
 fi
 
 echo "Job started successfully: $JOB_ID"
-sleep 60  # 额外等待稳定
+
+# 等待额外时间确保稳定运行60秒
+echo "Waiting for stable operation (60s)..."
+sleep 60
 
 # 收集稳定状态指标
 echo "Collecting stable state metrics..."
 python3 results/metrics-collector.py "${EXPERIMENT_NAME}_stable" $((CHECKPOINT_INTERVAL/1000)) 0
 
-# 注入故障
-echo "Injecting fault: pausing $FAULT_TASKMANAGER for ${FAULT_DURATION}s..."
+# 注入故障 - 停止TaskManager
+echo "Injecting fault: stopping $FAULT_TASKMANAGER for ${FAULT_DURATION}s..."
 FAULT_START_TIME=$(date +%s)
-docker-compose pause "$FAULT_TASKMANAGER"
+docker-compose stop "$FAULT_TASKMANAGER"
 
 # 故障期间监控
 echo "Monitoring during fault..."
 for i in $(seq 1 $FAULT_DURATION); do
-    if [ $((i % 10)) -eq 0 ]; then  # 每10秒收集一次
+    if [ $((i % 10)) -eq 0 ] || [ $i -le 5 ]; then  # 前5秒每秒收集，之后每10秒收集一次
         python3 results/metrics-collector.py "${EXPERIMENT_NAME}_fault_${i}s" $((CHECKPOINT_INTERVAL/1000)) $i
     fi
     sleep 1
 done
 
-# 恢复
+# 恢复 - 重新启动TaskManager
 echo "Restoring $FAULT_TASKMANAGER..."
-docker-compose unpause "$FAULT_TASKMANAGER"
+docker-compose start "$FAULT_TASKMANAGER"
 FAULT_END_TIME=$(date +%s)
 ACTUAL_FAULT_DURATION=$((FAULT_END_TIME - FAULT_START_TIME))
 
 echo "Actual fault duration: ${ACTUAL_FAULT_DURATION}s"
+
+# 等待TaskManager重新注册
+echo "Waiting for TaskManager to re-register..."
+sleep 30
 
 # 恢复期间监控
 echo "Monitoring recovery for 120 seconds..."

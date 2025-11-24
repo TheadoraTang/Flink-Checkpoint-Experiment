@@ -17,17 +17,17 @@ docker-compose down
 docker-compose up -d
 sleep 30
 
-# 实验1: 30秒检查点 + 暂停taskmanager1 (30秒)
+# 实验1: 30秒检查点 + 停止taskmanager1 (30秒)
 echo ""
 echo "=== EXPERIMENT 1: 30s Checkpoint + TaskManager1 Fault (30s) ==="
 ./scripts/run-checkpoint-experiment.sh 30000 taskmanager1 30 "exp_30s_checkpoint"
 
-# 实验2: 60秒检查点 + 暂停taskmanager2 (60秒)
+# 实验2: 60秒检查点 + 停止taskmanager2 (60秒)
 echo ""
 echo "=== EXPERIMENT 2: 60s Checkpoint + TaskManager2 Fault (60s) ==="
 ./scripts/run-checkpoint-experiment.sh 60000 taskmanager2 60 "exp_60s_checkpoint"
 
-# 实验3: 120秒检查点 + 暂停taskmanager3 (120秒)
+# 实验3: 120秒检查点 + 停止taskmanager3 (120秒)
 echo ""
 echo "=== EXPERIMENT 3: 120s Checkpoint + TaskManager3 Fault (120s) ==="
 ./scripts/run-checkpoint-experiment.sh 120000 taskmanager3 120 "exp_120s_checkpoint"
