@@ -48,9 +48,13 @@ mkdir checkpoints
 ```
 
 ```bash
-sudo chmod -R 777 checkpoints
+chmod 777 flink-checkpoints
 ```
 
+### 构建项目
+```bash
+mvn clean package
+```
 
 ### 运行优化后的实验
 ```bash
