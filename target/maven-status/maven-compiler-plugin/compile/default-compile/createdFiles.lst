@@ -1,5 +1,4 @@
-com/experiment/TaxiRevenueJob.class
-com/experiment/TaxiEvent.class
-com/experiment/TaxiEventParser.class
-com/experiment/TaxiRevenueJob$FileCyclingSource.class
-com/experiment/TaxiRevenueFunction.class
+com/experiment/TaxiRide.class
+com/experiment/LoopingSource.class
+com/experiment/TaxiStreamJob$Aggregator.class
+com/experiment/TaxiStreamJob.class

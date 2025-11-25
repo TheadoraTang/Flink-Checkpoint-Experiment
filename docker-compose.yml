@@ -1,0 +1,31 @@
+version: "2.2"
+services:
+  jobmanager:
+    image: flink:1.19.3-java17
+    ports:
+      - "8081:8081"
+    command: jobmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        
+    volumes:
+      - ./data:/opt/data              # 映射数据文件
+      - ./checkpoints:/opt/flink/checkpoints # 映射检查点存储
+      - ./target:/opt/job             # 映射编译好的 jar 包
+
+  taskmanager:
+    image: flink:1.19.3-java17
+    depends_on:
+      - jobmanager
+    command: taskmanager
+    environment:
+      - |
+        FLINK_PROPERTIES=
+        jobmanager.rpc.address: jobmanager
+        taskmanager.numberOfTaskSlots: 1
+    volumes:
+      - ./data:/opt/data
+      - ./checkpoints:/opt/flink/checkpoints
+      - ./target:/opt/job

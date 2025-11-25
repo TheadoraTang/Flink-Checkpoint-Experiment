@@ -42,15 +42,19 @@ pip install psutil requests
 ```
 
 
-### 给脚本执行权限
+### 建立文件夹并给予权限
 ```bash
-chmod +x scripts/*.sh
+mkdir checkpoints
+```
+
+```bash
+sudo chmod -R 777 checkpoints
 ```
 
 
 ### 运行优化后的实验
 ```bash
-./scripts/run-experiment-with-detailed-metrics.sh
+python3 ./scripts/chaos_monkey.py
 ```
 
 ## 检查点间隔配置
