@@ -65,7 +65,7 @@ public class TaxiSourceFunction extends RichSourceFunction<TaxiRecord> { // ç»§æ
                         continue; //
                     }
 
-                    controlEmissionSpeed(record); //
+//                     controlEmissionSpeed(record); //
 
                     long currentTimestamp = record.getPickupDatetime().toEpochSecond(java.time.ZoneOffset.UTC) * 1000; //
                     ctx.collectWithTimestamp(record, currentTimestamp); //
