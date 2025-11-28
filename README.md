@@ -8,6 +8,10 @@
 - Docker + Docker Compose
 - 4个 TaskManager
 
+```bash
+docker stack rm flink
+docker stack deploy -c flink-stack.yaml flink
+```
 
 ## 检查点间隔配置
 - 实验1: 30秒
