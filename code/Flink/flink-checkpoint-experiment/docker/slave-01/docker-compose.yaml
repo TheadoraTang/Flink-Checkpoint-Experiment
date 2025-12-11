@@ -1,0 +1,27 @@
+# taskmanager.yaml
+
+services:
+  taskmanager:
+    image: flink:1.19.3-scala_2.12-java17
+    container_name: flink-taskmanager-01
+    command: taskmanager
+    network_mode: "host"
+    environment:
+      - JOB_MANAGER_RPC_ADDRESS=<hostname_or_ip>
+      - FLINK_ENV_JAVA_OPTS=--add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.time=ALL-UNNAMED
+    # ports:
+    #   - "16121:16121"
+    #   - "16122:16122"
+    volumes:
+      - ../assets/flink-conf.yaml:/opt/flink/conf/flink-conf.yaml
+      - ../assets/checkpoints:/opt/flink/checkpoints
+      - ../assets/datasets/nyc-taxi:/opt/flink/data/nyc-taxi
+      - ../assets/flink-lib/flink-s3-fs-hadoop-1.19.3.jar:/opt/flink/lib/flink-s3-fs-hadoop-1.19.3.jar
+#     networks:
+#       - web_server
+#     extra_hosts:
+#       - "host.docker.internal:host-gateway"
+
+# networks:
+#   web_server:
+#     external: true
