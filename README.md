@@ -185,7 +185,7 @@ sudo usermod -aG flink $USER
 
 ![latency with lines](image/latency_with_lines.png)
 可以看出，在故障期间，Latency会产生比较大的波动，随后又恢复到正常状态。但是三种时间间隔下的**延迟尖峰**有较大的差异，可以看到30s间隔下的延迟峰值与延迟低值的差距是最小的，波动性远优于其他两个间隔
-![Average Latency Comparison](image/Average_Latency_Comparison.png)
+![Average Latency Comparison](image/Average_Latency_comparison.png)
 根据实验结果，我们计算了平均Latency，发现随着checkpoint间隔增大，Latency会逐渐降低，但是差异相对较小，这可能与我们的真实实验工作负载有关。
 
 - **结论**：Checkpoint间隔越大，平均延迟越低。
