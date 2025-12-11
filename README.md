@@ -168,6 +168,7 @@ sudo usermod -aG flink $USER
    ![monitor](image/指标采集器截图.png)
 
 7. 在特定服务器上启动 `./fault.sh`（用于中断模拟)
+
    ![fault](image/中断器截图.png)
 
 ## 实验结果与分析
