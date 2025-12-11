@@ -150,16 +150,23 @@ sudo usermod -aG flink $USER
 注：`nyc-taxi-2023-01.csv` -> `sort_nyc_csv.py` -> `nyc-taxi-2023-01-fixed.csv`
 
 1. 启动 `./master-start.sh`（包含 MinIO，kafka，JobManager）
+
 2. 启动 `./distributed-slaves-start.sh`（启动TaskManager）
    ![taskmanager](image/taskmanager截图.png)
+
 3. 上传作业到 Flink 平台
+
 4. 启动 `python ./serv_nyc_csv_kafka.py`（Python 发包器，作为数据源）
    ![发包](image/python发包器截图.png)
+
 5. 执行作业
    ![checkpoint](image/checkpoint截图.png)
+
    ![running](image/作业运行截图.png)
+
 6. 启动 `cd ./monitor/ && ./monitor.py`（用于采集指标）
    ![monitor](image/指标采集器截图.png)
+
 7. 在特定服务器上启动 `./fault.sh`（用于中断模拟)
    ![fault](image/中断器截图.png)
 
@@ -172,6 +179,7 @@ sudo usermod -aG flink $USER
 #### 1. **Checkpoint间隔与吞吐量的关系**
 
 ![ThroughtPut Comparison](image/Throughput_Comparison.png)
+
 ![Average Throughput Comparison](image/Average_Throughput_comparison.png)
 
 可以从图中看到，300s的吞吐量峰值要远高于其他两个相对短间隔,平均吞吐量也更高。但是由于峰值对平均值的影响比较大，我们筛选了非故障时间的数据，再次计算了吞吐量平均值，结果如下：
