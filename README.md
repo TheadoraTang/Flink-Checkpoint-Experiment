@@ -80,16 +80,16 @@
 **核心字段**：
 
 
-| 字段             | 用途                                             |
-| ---------------- | ------------------------------------------------ |
-| `pickupDatetime` | 窗口聚合（2小时滚动窗口）的时间基准 (Event Time) |
-| `puLocationID`   | 分组键                                           |
-| `totalAmount`    | 聚合指标 (Sum)                                   |
+| 字段             | 用途                              |
+| ---------------- |---------------------------------|
+| `pickupDatetime` | 窗口聚合（1小时滚动窗口）的时间基准 (Event Time) |
+| `puLocationID`   | 分组键                             |
+| `totalAmount`    | 聚合指标 (Sum)                      |
 
 ### 2. 工作负载 (Workload)
 
 - **回放倍速**：7200倍（模拟1s 处理数据集中 2小时的数据量）。
-- **计算逻辑**：2小时滚动窗口，按区域ID（PULocaionID）统计累计收入与行程数。
+- **计算逻辑**：1小时滚动窗口，按区域ID（PULocaionID）统计累计收入与行程数。
 - **变量控制**：Checkpoint 间隔设置为 **5s, 30s, 5min** 三组。注入故障率固定为10min断掉taskmanager节点一次，一共注入故障三次
 
 ### 工作负载设计原理分析
@@ -103,16 +103,16 @@
 * **模拟高吞吐环境**：原始数据集覆盖 6 个月时间，若以实时速度运行，实验周期过长。7200 倍速意味着将现实中的 2 小时（7200 秒）的数据量压缩到 **1 秒钟**内处理。
 * **实现集群压测**：这使得 Flink 集群在极短时间内必须处理**海量历史数据**，从而模拟出生产环境中数据高峰期或高并发带来的巨大吞吐量需求，使集群达到瓶颈，能清晰地观察到 Checkpoint 机制的**真实 I/O 和网络开销**。
 
-#### 2. 计算逻辑：2小时滚动窗口 (基于 Event Time)
+#### 2. 计算逻辑：1小时滚动窗口 (基于 Event Time)
 
-选择 2小时作为滚动窗口的大小，是为了**与数据回放速度和状态的积累相匹配**，以便观察 Checkpoint 机制的性能。
+选择 1小时作为滚动窗口的大小，是为了**与数据回放速度和状态的积累相匹配**，以便观察 Checkpoint 机制的性能。
 
-* **匹配实时性测试**：由于数据是 7200 倍速回放，数据流中一个 **2 小时窗口**在现实时间中**只需要 1 秒**就能处理完成。这允许我们在极快的速度下测试窗口聚合的延迟。
+* **匹配实时性测试**：由于数据是 7200 倍速回放。这允许我们在极快的速度下测试窗口聚合的延迟。
 * **产生 Keyed State 压力**：滚动窗口会持续积累 Keyed State（按区域 ID 维护的累计收入和行程数）。这个设计确保了 Flink 在执行 Checkpoint 时有**足够大的状态体积**需要序列化和持久化。这对于观察 **Checkpoint 间隔越长、状态体积越大、Duration 越长**的趋势至关重要。
 
 #### 3. 变量控制：5s, 30s, 5min 三组间隔
 
-这三组差异显著的 Checkpoint 间隔是实验设计的核心，目的是全面探究**性能与容错能力**的权衡。
+这三组差异显著的 Checkpoint 间隔是实验设计的核心，目的是探究**性能与容错能力**的权衡。
 
 
 | 间隔设置          | 实验目的                     | 关注的性能指标                                 | 权衡侧重       |
@@ -155,6 +155,7 @@ sudo usermod -aG flink $USER
    ![taskmanager](image/taskmanager截图.png)
 
 3. 上传作业到 Flink 平台
+   ![作业上传](image/作业上传截图.png)
 
 4. 启动 `python ./serv_nyc_csv_kafka.py`（Python 发包器，作为数据源）
    ![发包](image/python发包器截图.png)
@@ -181,7 +182,7 @@ sudo usermod -aG flink $USER
 
 ![ThroughtPut Comparison](image/Throughput_Comparison.png)
 
-![Average Throughput Comparison](image/Average_Throughput_comparison.png)
+![Average Throughput Comparison](image/Average_Throughput_Comparison.png)
 
 可以从图中看到，300s的吞吐量峰值要远高于其他两个相对短间隔,平均吞吐量也更高。但是由于峰值对平均值的影响比较大，我们筛选了非故障时间的数据，再次计算了吞吐量平均值，结果如下：
 ![Average Throughput Comparison new](image/Average_Throughput_without_peak_comparison.png)
