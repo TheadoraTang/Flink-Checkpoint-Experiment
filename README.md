@@ -182,7 +182,7 @@ sudo usermod -aG flink $USER
 
 ![ThroughtPut Comparison](image/Throughput_Comparison.png)
 
-![Average Throughput Comparison](image/Average_Throughput_Comparison.png)
+![Average Throughput Comparison](image/Average_Throughput_comparison.png)
 
 可以从图中看到，300s的吞吐量峰值要远高于其他两个相对短间隔,平均吞吐量也更高。但是由于峰值对平均值的影响比较大，我们筛选了非故障时间的数据，再次计算了吞吐量平均值，结果如下：
 ![Average Throughput Comparison new](image/Average_Throughput_without_peak_comparison.png)
