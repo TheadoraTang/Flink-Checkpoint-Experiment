@@ -105,9 +105,6 @@
 
 #### 2. 计算逻辑：1小时滚动窗口 (基于 Event Time)
 
-选择 1小时作为滚动窗口的大小，是为了**与数据回放速度和状态的积累相匹配**，以便观察 Checkpoint 机制的性能。
-
-* **匹配实时性测试**：由于数据是 7200 倍速回放。这允许我们在极快的速度下测试窗口聚合的延迟。
 * **产生 Keyed State 压力**：滚动窗口会持续积累 Keyed State（按区域 ID 维护的累计收入和行程数）。这个设计确保了 Flink 在执行 Checkpoint 时有**足够大的状态体积**需要序列化和持久化。这对于观察 **Checkpoint 间隔越长、状态体积越大、Duration 越长**的趋势至关重要。
 
 #### 3. 变量控制：5s, 30s, 5min 三组间隔
@@ -186,6 +183,7 @@ sudo usermod -aG flink $USER
 
 可以从图中看到，300s的吞吐量峰值要远高于其他两个相对短间隔,平均吞吐量也更高。但是由于峰值对平均值的影响比较大，我们筛选了非故障时间的数据，再次计算了吞吐量平均值，结果如下：
 ![Average Throughput Comparison new](image/Average_Throughput_without_peak_comparison.png)
+
 可以看到，在非故障时间，30s间隔的平均吞吐量是最高的
 
 - **结论**：Checkpoint间隔越大，系统的平均吞吐量以及恢复过程中的吞吐量峰值越高。
@@ -194,8 +192,11 @@ sudo usermod -aG flink $USER
 #### 2. **Checkpoint间隔与延迟的关系**
 
 ![latency with lines](image/latency_with_lines.png)
+
 可以看出，在故障期间，Latency会产生比较大的波动，随后又恢复到正常状态。但是三种时间间隔下的**延迟尖峰**有较大的差异，可以看到30s间隔下的延迟峰值与延迟低值的差距是最小的，波动性远优于其他两个间隔
+
 ![Average Latency Comparison](image/Average_Latency_comparison.png)
+
 根据实验结果，我们计算了平均Latency，发现随着checkpoint间隔增大，Latency会逐渐降低，但是差异相对较小，这可能与我们的真实实验工作负载有关。
 
 - **结论**：Checkpoint间隔越大，平均延迟越低。
@@ -204,6 +205,7 @@ sudo usermod -aG flink $USER
 #### 3. **Checkpoint间隔与重启恢复时间的关系**
 
 ![Restart Time Comparison](image/Average_RestartTime_comparison.png)
+
 从图中可以看出，Checkpoint间隔越大，Restart Time会随之增加，在5min间隔下对比更为明显。
 
 - **结论**：Checkpoint间隔越大，重启恢复时间增加。
@@ -212,6 +214,7 @@ sudo usermod -aG flink $USER
 #### 4. **Checkpoint间隔与Checkpoint Duration的关系**
 
 ![Checkpoint Duration Comparison](image/CheckpointDurationMs_Comparison.png)
+
 从图中可以看出，Checkpoint间隔越大，Checkpoint Duration也会变大。但是也可以看出，随着Checkpoint间隔越大，Checkpoint Duration的波动也会更加趋于稳定。
 
 ![Checkpoint Duration Comparison new](image/Average_CheckpointDurationMs_comparison.png)
